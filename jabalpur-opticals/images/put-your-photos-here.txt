@@ -1,0 +1,13 @@
+Put your shop photos in this folder, using these exact file names:
+
+  shop-1.jpg   -> shows in the "Shop front" gallery card
+  shop-2.jpg   -> shows in the "Frames wall" gallery card
+  shop-3.jpg   -> shows in the "Eye-test corner" gallery card
+
+You can rename the files to whatever you like, or add more photos —
+just update the matching "src" values inside the SHOP.gallery list
+near the bottom of the <script> in index.html.
+
+Until a photo is added, that gallery card shows a dashed "add your
+photo" placeholder instead of a broken image, so the page still
+looks tidy.
