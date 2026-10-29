@@ -34,3 +34,13 @@ CREATE TABLE IF NOT EXISTS enquiries (
   message    TEXT          NULL,                              -- optional free-text message, can be left blank
   created_at DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP  -- filled in automatically with the submission time
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- The shop keeper's login. Only a password HASH is stored, never the
+-- real password. (If you skip this, php/create_admin.php creates the
+-- table for you automatically — you don't need to re-import.)
+CREATE TABLE IF NOT EXISTS admins (
+  id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username      VARCHAR(50)  NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

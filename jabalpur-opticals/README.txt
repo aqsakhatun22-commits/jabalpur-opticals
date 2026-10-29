@@ -7,7 +7,12 @@ WHAT'S IN THIS FOLDER
   images/                    put your shop photos here (see the .txt inside)
   php/config.php             database connection settings (edit this)
   php/enquiry.php            saves enquiry form submissions into MySQL
-  php/view_enquiries.php     a simple page to see saved enquiries
+  php/view_enquiries.php     password-protected page listing enquiries
+  php/login.php, logout.php  shop keeper login / logout
+  php/auth.php               gatekeeper that protects the pages
+  php/export_csv.php         "Download Excel" (.csv) of all enquiries
+  php/create_admin.php       ONE-TIME page to create the login, then delete it
+  php/reset_password.php     "forgot password" page (needs your secret reset key)
   sql/schema.sql             run this once in phpMyAdmin to create the database
 
 
@@ -121,3 +126,70 @@ your college/teacher gives you).
 That's the whole path from "files on your laptop" to "live
 website with a working database" — steps 1-3 can be skipped if
 you only need to demo it locally for your teacher.
+
+
+6. SHOP KEEPER LOGIN + EXCEL DOWNLOAD
+---------------------------------------
+  1. After the site and database are set up, open:
+         yoursite.com/php/create_admin.php
+     (locally: http://localhost/jabalpur-opticals/php/create_admin.php)
+  2. Choose a username and a password (8+ characters) and click
+     "Create admin".
+  3. DELETE php/create_admin.php straight afterwards.
+  4. The shop keeper now opens  yoursite.com/php/login.php , signs in,
+     and sees every enquiry. "Download Excel" saves a .csv file that
+     opens in Excel or Google Sheets. "Log out" ends the session.
+
+The password is stored as a bcrypt HASH (password_hash), never as
+plain text. A hash is one-way: it cannot be turned back into the
+password, so even someone who reads the database cannot see it.
+
+
+7. WHERE THE SHOP KEEPER LOGS IN
+----------------------------------
+On the website there is a "Shop login" button in the top menu (after
+the intro animation) and a "Shop keeper login" link in the footer at
+the very bottom. Both open  php/login.php . After signing in he sees
+the enquiries table and can download it as Excel.
+
+
+8. FORGOT PASSWORD
+--------------------
+A hashed password cannot be read back, only replaced.
+  1. Open php/config.php and change  $RESET_KEY  to your own long
+     secret (12+ characters). Keep it private. Do this on the live
+     server's config.php too.
+  2. If the shop keeper forgets his password, open
+         yoursite.com/php/reset_password.php
+     enter your reset key, his username and a new password.
+  3. Tell him the new password. Enquiries are not affected.
+If $RESET_KEY is left unchanged, reset_password.php stays switched off.
+
+
+NOTE: always open the site through  http://localhost/jabalpur-opticals/
+(XAMPP running), never by double-clicking index.html or from inside a
+zip/RAR preview. PHP only runs through the web server, so the login
+page and enquiry form fail on file:// addresses.
+
+
+9. HERO ZOOM ON PHONES (what was changed)
+-------------------------------------------
+The spectacles zoom is driven by scrolling. To make it show on every phone:
+  - It is no longer switched off when the phone has "reduce motion" or
+    battery saver turned on (that setting used to skip the whole effect).
+    Only the endless decorative loops are turned off in that case.
+  - The page no longer uses "overflow-x:hidden" in a way that breaks
+    "position:sticky" on some phones (it uses overflow-x:clip).
+  - If a phone browser still breaks sticky, the JavaScript detects it and
+    pins the hero itself (functions checkPin / js-fixed in index.html).
+  - Old-phone fallbacks added (no "inset" or "??" needed).
+  - The hint says "Swipe up to step inside" on touch screens.
+Test on a real phone: connect it to the SAME Wi-Fi as your computer and
+open  http://YOUR-PC-IP/jabalpur-opticals/  (find the IP with "ipconfig").
+
+
+10. COMMENTS
+--------------
+Every file now has comments explaining what each part and each function
+does: index.html (HTML tags, every CSS rule, every JavaScript line) and all
+PHP files. Read the comments from top to bottom to explain the code.
